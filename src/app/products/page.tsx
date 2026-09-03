@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { Server, Calendar } from "lucide-react";
+import { Server, Calendar, ArrowRight } from "lucide-react";
 
 export const metadata = {
   title: "Products · Xtrail AI",
@@ -147,10 +147,17 @@ export default function ProductsPage() {
             <p className="font-mono text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8 leading-relaxed">
               Our engineering team provides test gateway units and live Command Tower dashboard demos tailored for your factory setup.
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="/try-now"
+                className="px-8 py-4 rounded-xl font-mono text-xs font-bold tracking-widest uppercase bg-[#00a7e1] text-black hover:bg-white transition-all duration-300 shadow-[0_0_25px_rgba(0,167,225,0.4)] flex items-center gap-2 hover:scale-105"
+              >
+                <span>Try Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
               <a
                 href="mailto:products@xtrail.in"
-                className="px-8 py-4 rounded-xl font-mono text-xs font-bold tracking-widest uppercase bg-white text-black hover:bg-zinc-200 transition-all duration-300 shadow-[0_0_25px_rgba(255,255,255,0.2)] flex items-center gap-2"
+                className="px-8 py-4 rounded-xl font-mono text-xs font-bold tracking-widest uppercase bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-all duration-300 flex items-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Contact Products Team</span>

@@ -191,10 +191,10 @@ export default function ProductCard({ product, index }: ProductCardProps) {
           {/* Action CTAs */}
           <div className="pt-4 border-t border-white/10 flex flex-wrap items-center gap-4">
             <a
-              href="#demo"
-              className="px-6 py-3 rounded-xl font-mono text-xs font-bold tracking-wider uppercase bg-white text-black hover:bg-zinc-200 transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+              href={`/try-now?product=${product.id}`}
+              className="px-6 py-3 rounded-xl font-mono text-xs font-bold tracking-wider uppercase bg-white text-black hover:bg-[#00a7e1] hover:text-black transition-all duration-300 flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_25px_rgba(0,167,225,0.4)] hover:scale-105"
             >
-              <span>Request Demo</span>
+              <span>Try Now</span>
               <ArrowRight className="w-4 h-4" />
             </a>
           </div>

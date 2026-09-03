@@ -4,18 +4,45 @@ import React, { useState, useEffect } from "react";
 import { ArrowRight, Activity, Zap, Cpu, ShieldCheck, Radio } from "lucide-react";
 
 export default function HeroSection() {
-  // Simulated real-time machine telemetry values
+  // Real-time machine telemetry values synced with FastAPI backend
   const [oeeIndex, setOeeIndex] = useState(89.4);
   const [powerSavings, setPowerSavings] = useState(24.8);
   const [vibrationVal, setVibrationVal] = useState(0.04);
+  const [backendConnected, setBackendConnected] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setOeeIndex((prev) => +(prev + (Math.random() * 0.4 - 0.2)).toFixed(1));
-      setPowerSavings((prev) => +(prev + (Math.random() * 0.2 - 0.1)).toFixed(1));
-      setVibrationVal((prev) => +(0.04 + Math.random() * 0.01).toFixed(3));
-    }, 2500);
-    return () => clearInterval(interval);
+    let isMounted = true;
+
+    async function syncTelemetry() {
+      try {
+        const res = await fetch("/api/v1/telemetry/live");
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted) {
+            setOeeIndex(data.oee_index);
+            setPowerSavings(data.power_savings_pct);
+            setVibrationVal(data.vibration_rms);
+            setBackendConnected(true);
+          }
+          return;
+        }
+      } catch (err) {
+        // fallback to smooth simulation if offline
+      }
+
+      if (isMounted) {
+        setOeeIndex((prev) => +(prev + (Math.random() * 0.4 - 0.2)).toFixed(1));
+        setPowerSavings((prev) => +(prev + (Math.random() * 0.2 - 0.1)).toFixed(1));
+        setVibrationVal((prev) => +(0.04 + Math.random() * 0.01).toFixed(3));
+      }
+    }
+
+    syncTelemetry();
+    const interval = setInterval(syncTelemetry, 2500);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   return (
@@ -110,12 +137,16 @@ export default function HeroSection() {
                   </div>
                   <div>
                     <h3 className="font-syne font-bold text-sm text-white">Plant Control Tower</h3>
-                    <p className="font-mono text-[10px] text-white/40">NODE-8472 • LIVE FEED</p>
+                    <p className="font-mono text-[10px] text-white/40">
+                      NODE-8472 • {backendConnected ? "FASTAPI :8001 SYNCED" : "LIVE FEED"}
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-                  <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
-                  <span className="font-mono text-[10px] font-semibold text-emerald-400 uppercase">ACTIVE</span>
+                <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${backendConnected ? "bg-emerald-500/10 border border-emerald-500/30" : "bg-cyan-500/10 border border-cyan-500/30"}`}>
+                  <Radio className={`w-3 h-3 animate-pulse ${backendConnected ? "text-emerald-400" : "text-cyan-400"}`} />
+                  <span className={`font-mono text-[10px] font-semibold uppercase ${backendConnected ? "text-emerald-400" : "text-cyan-400"}`}>
+                    {backendConnected ? "API LIVE" : "ACTIVE"}
+                  </span>
                 </div>
               </div>
 
